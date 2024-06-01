@@ -5,12 +5,11 @@ mod consts;
 use aes_struct::AES;
 
 fn main() {
-    let key = String::from("Thats my Kung Fu");
-    let iv = String::from("This is Kung Fu");
-    let input = String::from("Two One Nine Two");
+    let key = String::from("Thats my KuTTTTT");
+    let iv = String::from("This is KungGGG");
+    let input = String::from("Лол это очен круто! One Nine TwoTwo One Nine TwoTwo One Nine Two");
     let mut matrix_key: [[u8; 4]; 4] = [[0; 4]; 4];
     let mut matrix_iv: [[u8; 4]; 4] = [[0; 4]; 4];
-    let mut matrix_input: [[u8; 4]; 4] = [[0; 4]; 4];
 
     for (i, c) in key.chars().enumerate() {
         matrix_key[i / 4][i % 4] = c as u8;
@@ -18,15 +17,17 @@ fn main() {
     for (i, c) in iv.chars().enumerate() {
         matrix_iv[i / 4][i % 4] = c as u8;
     }
-    for (i, c) in input.chars().enumerate() {
-        matrix_input[i / 4][i % 4] = c as u8;
-    }
-    println!("{:?}", matrix_input);
 
     let aes = AES::new(matrix_key, matrix_iv);
-    aes.encrypt_block(&mut matrix_input);
-    println!("{:?}", matrix_input);
+    let input_bytes = input.into_bytes();
 
-    aes.decrypt_block(&mut matrix_input);
-    println!("{:?}", matrix_input);
+    let encrypted = aes.encrypt(&input_bytes);
+
+    println!("{:?}", encrypted);
+
+    let decrypted_bytes = aes.decrypt(&encrypted);
+
+    let decrypted_string = String::from_utf8(decrypted_bytes).expect("Invalid UTF-8 sequence");
+
+    println!("{}", decrypted_string);
 }
